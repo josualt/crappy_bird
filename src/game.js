@@ -2,6 +2,7 @@ export default class Game extends Phaser.Scene {
   constructor() {
     super({ key: "game" });
   }
+
   preload() {
     this.load.spritesheet('player', 'assets/images/player.png', { frameWidth: 32, frameHight: 32 })
     
@@ -41,7 +42,8 @@ export default class Game extends Phaser.Scene {
 
 
     this.input.on('pointerdown', function(pointer) {
-      this.jump();
+     // this.jump();
+     this.gameOver()
     }, this)
 
     this.playMusic()
@@ -49,6 +51,7 @@ export default class Game extends Phaser.Scene {
     this.updateScoreEvent = this.time.addEvent({ delay: 1000, callback: () => this.updateScore(), callbackScope: this, loop: true });
 
   }
+
 updateScore(){
 this.score++
 this.scoreText.setText(this.score)
@@ -81,8 +84,13 @@ this.scoreText.setText(this.score)
     this.updateScoreEvent.destroy()
     this.music.stop()
     this.deathSound.play()
-    this.time.delayedCall(3000, () => this.scene.start("gameover"), null, this)
+    this.time.delayedCall(3000, () => this.gameOver(), null, this)
 
+  }
+
+  gameOver(){
+    this.music.stop()
+    this.scene.start("gameover")
   }
 
   playMusic() {
