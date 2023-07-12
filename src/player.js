@@ -1,19 +1,25 @@
-class Player extends Phaser.GameObjects.Rectangle {
-    constructor (scene, x, y, number) {
-      super(scene, x, y, 32, 32, 0x00ff00)
-      this.setOrigin(0.5)
-      this.scene = scene;
-      this.scene.add.existing(this);
-      this.scene.physics.add.existing(this);
-      this.body.collideWorldBounds = true;
-      this.setScale(1)
-      this.jumping = false;
-      this.invincible = false;
-      this.health = 10;
-      this.body.mass = 10;
-      this.body.setDragY = 10;
-    }  
+class Player extends Phaser.GameObjects.Sprite {
+  constructor(scene, x, y) {
+    super(scene, x, y, 'player')
+    this.flipX = false
+    this.scene = scene
+    this.scale = 2
+    this.scene.add.existing(this)
+    this.scene.physics.add.existing(this)
+    this.body.collideWorldBounds = true
+    this.body.setSize(25, 16)
+    this.init()
   }
+  init() {
+    this.scene.anims.create({
+      key: 'player',
+      frames: this.scene.anims.generateFrameNumbers('player', { start: 0, end: 1 }),
+      frameRate: 3,
+      repeat: -1
+    });
+    this.anims.play('player')
+  }
+}
 
 export default Player;
   

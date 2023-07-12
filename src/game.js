@@ -1,3 +1,10 @@
+import Player from "./player";
+import Pipe from "./pipe";
+import PipeGenerator from "./pipe_generator";
+import Enemy from "./enemy";
+import EnemyGenerator from "./enemy_generator";
+import Trail from "./trail";
+
 export default class Game extends Phaser.Scene {
   constructor() {
     super({ key: "game" });
@@ -91,6 +98,7 @@ this.scoreText.setText(this.score)
   gameOver(){
     this.music.stop()
     this.scene.start("gameover")
+    this.registry.set('score', this.score)
   }
 
   playMusic() {
@@ -102,127 +110,6 @@ this.scoreText.setText(this.score)
   }
 }
 
-class Player extends Phaser.GameObjects.Sprite {
-  constructor(scene, x, y) {
-    super(scene, x, y, 'player')
-    this.flipX = false
-    this.scene = scene
-    this.scale = 2
-    this.scene.add.existing(this)
-    this.scene.physics.add.existing(this)
-    this.body.collideWorldBounds = true
-    this.body.setSize(25, 16)
-    this.init()
-  }
-  init() {
-    this.scene.anims.create({
-      key: 'player',
-      frames: this.scene.anims.generateFrameNumbers('player', { start: 0, end: 1 }),
-      frameRate: 3,
-      repeat: -1
-    });
-    this.anims.play('player')
-  }
-}
-
-class Trail extends Phaser.GameObjects.Rectangle {
-  constructor(scene, x, y) {
-    super(scene, x, y, 32, 32, 0x696969)
-    this.scene = scene
-    this.scene.add.existing(this)
-    this.scene.physics.add.existing(this)
-    this.body.collideWorldBounds = true
-  }
-}
 
 
-class Pipe extends Phaser.GameObjects.Rectangle {
-  constructor(scene, x, y) {
-    super(scene, x, y, 32, 150, 0x00ff00)
-    this.setOrigin(0)
-    this.scene = scene
-    this.scene.add.existing(this)
-    this.scene.physics.add.existing(this)
-    this.body.allowGravity = false
-    this.body.immovable = true
-    //this.body.collideWorldBounds = true
-    this.move()
-  }
-  move() {
-    this.scene.tweens.add({
-      targets: this,
-      x: { from: 800, to: -100 },
-      duration: 8000,
-      onComplete: () => { this.destroy() }
-    })
-
-
-  }
-}
-class PipeGenerator {
-  constructor(scene) {
-    this.scene = scene;
-    this.generate()
-  }
-
-  generate() {
-    const yTopPipe = Phaser.Math.Between(-20, -100);
-    const yBottomPipe = 260 + yTopPipe;
-
-    this.scene.pipes.add(new Pipe(this.scene, 800, yTopPipe))
-    this.scene.pipes.add(new Pipe(this.scene, 800, yBottomPipe))
-    const waitTime = Phaser.Math.Between(1000, 2000);
-    this.scene.time.delayedCall(waitTime, () => this.generate(), null, this)
-  }
-}
-
-
-class Enemy extends Phaser.GameObjects.Sprite {
-  constructor(scene, x, y) {
-    super(scene, x, y,'enemy')
-    this.setOrigin(0)
-    this.scene = scene
-    this.scene.add.existing(this)
-    this.scene.physics.add.existing(this)
-    this.body.allowGravity = false
-    this.body.immovable = true
-    //this.body.collideWorldBounds = true
-    this.moveEnemy()
-    this.init()
-  }
-    init() {
-    this.scene.anims.create({
-      key: 'enemy',
-      frames: this.scene.anims.generateFrameNumbers('enemy', { start: 0, end: 1 }),
-      frameRate: 3,
-      repeat: -1
-    });
-    this.anims.play('enemy')
-  }
-
-  moveEnemy() {
-    this.scene.tweens.add({
-      targets: this,
-      x: { from: 800, to: -100 },
-      duration: 6000,
-      onComplete: () => { this.destroy() }
-    })
-  }
-}
-
-
-class EnemyGenerator {
-  constructor(scene) {
-    this.scene = scene;
-    this.generate()
-  }
-
-  generate() {
-    const yEnemy = Phaser.Math.Between(0, 200);
-
-    this.scene.pipes.add(new Enemy(this.scene, 800, yEnemy))
-    const waitTime = Phaser.Math.Between(4000, 7000);
-    this.scene.time.delayedCall(waitTime, () => this.generate(), null, this)
-  }
-}
 
