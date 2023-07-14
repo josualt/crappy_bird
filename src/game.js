@@ -95,6 +95,7 @@ this.scoreText.setText(this.score)
     this.deathSound.play()
     this.time.delayedCall(3000, () => this.gameOver(), null, this)
     this.explosion()
+    this.cameras.main.shake(500)
   }
 
   explosion(){
