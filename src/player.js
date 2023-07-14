@@ -1,3 +1,5 @@
+import Trail from "./trail"
+
 class Player extends Phaser.GameObjects.Sprite {
   constructor(scene, x, y) {
     super(scene, x, y, 'player')
@@ -9,7 +11,9 @@ class Player extends Phaser.GameObjects.Sprite {
     this.body.collideWorldBounds = true
     this.body.setSize(25, 16)
     this.init()
+    this.scene.events.on('update', this.update, this)
   }
+
   init() {
     this.scene.anims.create({
       key: 'player',
@@ -18,6 +22,13 @@ class Player extends Phaser.GameObjects.Sprite {
       repeat: -1
     });
     this.anims.play('player')
+  }
+
+  update(){
+    if (this.active) {
+      new Trail(this.scene, this.x-30, this.y)
+
+    }
   }
 }
 

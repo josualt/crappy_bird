@@ -1,20 +1,22 @@
-class Trail extends Phaser.GameObjects.Rectangle {
-    constructor(scene, x, y, color = 0xffffff, velocity = -100) {
-      super(scene, x, y, 8, 8, color)
+class Feather extends Phaser.GameObjects.Sprite {
+    constructor(scene, x, y) {
+      super(scene, x, y,'feather')
       this.scene = scene
       this.scene.add.existing(this)
       this.scene.physics.add.existing(this)
-      this.body.allowGravity = false
-      this.body.setVelocityX(velocity)
       this.init()
     }
+
+
     init(){
+        const rotation = Phaser.Math.Between(0,360) 
       this.scene.tweens.add({
         targets: this,
         scale: { from: 1, to: 0 },
+        rotation: {from:rotation, to:rotation-180},
         duration: 1000,
         onComplete: () => { this.destroy() }
       })
     }
   }
-  export default Trail
+  export default Feather

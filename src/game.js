@@ -4,6 +4,7 @@ import PipeGenerator from "./pipe_generator";
 import Enemy from "./enemy";
 import EnemyGenerator from "./enemy_generator";
 import Trail from "./trail";
+import Feather from "./feather";
 
 export default class Game extends Phaser.Scene {
   constructor() {
@@ -20,6 +21,7 @@ export default class Game extends Phaser.Scene {
     this.load.image('cloud',
       'assets/images/cloud.png');
     this.load.image("background", "assets/images/background.jpg");
+    this.load.image("feather", "assets/images/feather.png");
 
    // this.load.image("enemy", "assets/images/enemy.png");
 
@@ -49,8 +51,8 @@ export default class Game extends Phaser.Scene {
 
 
     this.input.on('pointerdown', function(pointer) {
-     // this.jump();
-     this.gameOver()
+      this.jump();
+     //this.gameOver()
     }, this)
 
     this.playMusic()
@@ -92,7 +94,16 @@ this.scoreText.setText(this.score)
     this.music.stop()
     this.deathSound.play()
     this.time.delayedCall(3000, () => this.gameOver(), null, this)
+    this.explosion()
+  }
 
+  explosion(){
+    const featherAmount = Phaser.Math.Between(6,15)
+    for (let index = 0; index < featherAmount; index++) {
+      const offsetX = Phaser.Math.Between(-30,30)
+      const offsetY = Phaser.Math.Between(-30,30)
+      new Feather(this, this.player.x + offsetX, this.player.y + offsetY)      
+    }
   }
 
   gameOver(){

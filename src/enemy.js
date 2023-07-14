@@ -1,3 +1,5 @@
+import Trail from "./trail"
+
 class Enemy extends Phaser.GameObjects.Sprite {
     constructor(scene, x, y) {
       super(scene, x, y,'enemy')
@@ -10,6 +12,7 @@ class Enemy extends Phaser.GameObjects.Sprite {
       //this.body.collideWorldBounds = true
       this.moveEnemy()
       this.init()
+      this.scene.events.on('update', this.update, this)
     }
       init() {
       this.scene.anims.create({
@@ -28,6 +31,12 @@ class Enemy extends Phaser.GameObjects.Sprite {
         duration: 6000,
         onComplete: () => { this.destroy() }
       })
+    }
+    update(){
+      if (this.active && Phaser.Math.Between(0,11) > 10 ) {
+        new Trail(this.scene, this.x+30, this.y+20, 0xff0000, 100)
+  
+      }
     }
   }
 
